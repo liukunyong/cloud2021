@@ -3,6 +3,7 @@ package com.atguigu.springcloud.controller;
 import com.atguigu.springcloud.entities.CommonResult;
 import com.atguigu.springcloud.entities.Payment;
 import com.atguigu.springcloud.service.PaymentService;
+//import com.atguigu.springcloud.task.UseThread;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,11 @@ public class PaymentController {
 
     @Resource
     private PaymentService paymentService;
+
+//    @Autowired
+//    private UseThread useThread;
+    @Value("${server.port}")
+    private String serverPort;
 
     @PostMapping(value = "/payment/create")
     public CommonResult create(@RequestBody Payment payment)
@@ -59,5 +65,26 @@ public class PaymentController {
     @PostMapping(value = "/payment/getAll1")
     public void download(@RequestParam String report, HttpServletResponse response){
         paymentService.download(report,response);
+    }
+
+    @PostMapping(value = "/payment/updateFlag")
+    public void updateFlag(){
+//        useThread.setFalg(false);
+    }
+
+    @GetMapping(value = "/payment/discovery")
+    public Object discovery()
+    {
+        List<String> services = discoveryClient.getServices();
+        for (String element : services) {
+            log.info("*****element: "+element);
+        }
+
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        for (ServiceInstance instance : instances) {
+            log.info(instance.getServiceId()+"\t"+instance.getHost()+"\t"+instance.getPort()+"\t"+instance.getUri());
+        }
+
+        return this.discoveryClient;
     }
 }

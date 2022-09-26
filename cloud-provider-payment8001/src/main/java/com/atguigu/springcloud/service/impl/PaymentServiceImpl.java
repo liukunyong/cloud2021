@@ -2,6 +2,7 @@ package com.atguigu.springcloud.service.impl;
 
 import com.atguigu.springcloud.dao.PaymentDao;
 import com.atguigu.springcloud.entities.Payment;
+import com.atguigu.springcloud.redis.util.RedisUtil;
 import com.atguigu.springcloud.service.PaymentService;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -11,6 +12,7 @@ import org.apache.skywalking.apm.toolkit.trace.Tag;
 import org.apache.skywalking.apm.toolkit.trace.Tags;
 import org.apache.skywalking.apm.toolkit.trace.Trace;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +30,9 @@ public class PaymentServiceImpl implements PaymentService
     @Resource
     private PaymentDao paymentDao;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     public int create(Payment payment)
     {
         return paymentDao.create(payment);
@@ -43,6 +48,13 @@ public class PaymentServiceImpl implements PaymentService
 
     @Override
     public List<Payment> getAll() {
+
+//        List<Payment> paymentList = (List<Payment>) redisUtil.get("test");
+//
+//        if(CollectionUtils.isEmpty(paymentList)){
+//            paymentList = paymentDao.getAll();
+//            redisUtil.set("test",paymentList);
+//        }
         return paymentDao.getAll();
     }
 
