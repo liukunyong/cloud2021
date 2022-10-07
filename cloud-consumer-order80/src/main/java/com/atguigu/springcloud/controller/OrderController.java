@@ -44,4 +44,13 @@ public class OrderController {
         //getForObject两个参数：请求地址，返回的对象类型
         return restTemplate.getForObject(PAYMENT_URL + "/payment/getAll", CommonResult.class);
     }
+
+    // ====================> zipkin+sleuth
+    @GetMapping("/consumer/payment/zipkin")
+    public String paymentZipkin()
+    {
+        String result = restTemplate.getForObject(PAYMENT_URL+"/payment/zipkin/", String.class);
+        log.info("ceshileme");
+        return result;
+    }
 }
